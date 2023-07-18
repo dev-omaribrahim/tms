@@ -1,5 +1,5 @@
 # tms
-Task Management System
+CRUD with REST API for a simple task management system using Python, Django and DRF
 
 # Installation
 1 - git clone https://github.com/dev-omaribrahim/tms.git
