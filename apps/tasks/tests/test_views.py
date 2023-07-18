@@ -4,6 +4,10 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from rest_framework_simplejwt.tokens import AccessToken
+from django.contrib.auth.models import User
+
+
 from ..models import Task
 
 
@@ -13,8 +17,12 @@ class TaskListCreateAPIViewTest(APITestCase):
     """
 
     def setUp(self):
+        
         logger = logging.getLogger("django.request")
         logger.setLevel(logging.ERROR)
+
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.access_token = AccessToken.for_user(self.user)
 
         self.task1 = Task.objects.create(
             title="Task 1",
@@ -30,11 +38,15 @@ class TaskListCreateAPIViewTest(APITestCase):
             description="task description",
             due_date="2023-07-01",
         )
+        
+    def authenticate(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(self.access_token))
 
     def test_get_tasks(self):
         """
         Test retrieving a list of tasks.
         """
+        self.authenticate()
         url = reverse("tasks:task_list_create_api_view")
         response = self.client.get(url, format="json")
 
@@ -45,6 +57,7 @@ class TaskListCreateAPIViewTest(APITestCase):
         """
         Test retrieving tasks with a status filter.
         """
+        self.authenticate()
         url = reverse("tasks:task_list_create_api_view")
         response = self.client.get(url + "?status=pending", format="json")
 
@@ -56,6 +69,7 @@ class TaskListCreateAPIViewTest(APITestCase):
         """
         Test retrieving tasks with a priority filter.
         """
+        self.authenticate()
         url = reverse("tasks:task_list_create_api_view")
         response = self.client.get(url + "?priority=low", format="json")
 
@@ -67,6 +81,7 @@ class TaskListCreateAPIViewTest(APITestCase):
         """
         Test creating a task with valid data.
         """
+        self.authenticate()
         url = reverse("tasks:task_list_create_api_view")
         data = {
             "title": "New Task",
@@ -85,6 +100,7 @@ class TaskListCreateAPIViewTest(APITestCase):
         """
         Test creating a task with invalid data.
         """
+        self.authenticate()
         url = reverse("tasks:task_list_create_api_view")
         invalid_data_list = [
             {
@@ -139,6 +155,9 @@ class TaskDetailAPIViewTest(APITestCase):
         logger = logging.getLogger("django.request")
         logger.setLevel(logging.ERROR)
 
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.access_token = AccessToken.for_user(self.user)
+
         self.task = Task.objects.create(
             title="Existing Task",
             status="pending",
@@ -147,10 +166,14 @@ class TaskDetailAPIViewTest(APITestCase):
             due_date="2023-07-01",
         )
 
+    def authenticate(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(self.access_token))
+
     def test_get_task(self):
         """
         Test retrieving a specific task.
         """
+        self.authenticate()
         url = reverse("tasks:task_detail_api_view", args=[self.task.pk])
         response = self.client.get(url, format="json")
 
@@ -161,6 +184,7 @@ class TaskDetailAPIViewTest(APITestCase):
         """
         Test updating a specific task with valid data.
         """
+        self.authenticate()
         url = reverse("tasks:task_detail_api_view", args=[self.task.pk])
         data = {
             "title": "Updated Task",
@@ -179,6 +203,7 @@ class TaskDetailAPIViewTest(APITestCase):
         """
         Test updating a specific task with invalid data.
         """
+        self.authenticate()
         url = reverse("tasks:task_detail_api_view", args=[self.task.pk])
         data = {"title": "", "status": "completed", "priority": "low"}
         response = self.client.put(url, data, format="json")
@@ -190,6 +215,7 @@ class TaskDetailAPIViewTest(APITestCase):
         """
         Test deleting a specific task.
         """
+        self.authenticate()
         url = reverse("tasks:task_detail_api_view", args=[self.task.pk])
         response = self.client.delete(url, format="json")
 

@@ -3,6 +3,8 @@ from django.urls import include, path, re_path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+from rest_framework_simplejwt import views as jwt_views
+
 
 # Create a schema view for API documentation
 schema_view = get_schema_view(
@@ -20,6 +22,10 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("tasks/", include("apps.tasks.urls", namespace="tasks")),
+
+    path('api/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    
     # Swagger API documentation URLs
     re_path(
         r"^swagger(?P<format>\.json|\.yaml)$",

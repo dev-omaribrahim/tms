@@ -6,6 +6,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
 from rest_framework.views import APIView, Response
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Task
 from .serializers import TaskSerializer
@@ -18,6 +19,8 @@ class TaskListCreateAPIView(APIView):
     """
     API endpoint for listing and creating tasks.
     """
+
+    permission_classes = (IsAuthenticated,)
 
     @swagger_auto_schema(
         manual_parameters=[
@@ -96,6 +99,8 @@ class TaskDetailAPIView(APIView):
     """
     API endpoint for retrieving, updating, and deleting a specific task.
     """
+
+    permission_classes = (IsAuthenticated,)
 
     def get_task_object(self, pk):
         """
