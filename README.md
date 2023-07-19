@@ -1,4 +1,4 @@
-# tms
+# TMS
 CRUD with REST API for a simple task management system using Python, Django and DRF
 
 # Installation
@@ -27,6 +27,11 @@ CRUD with REST API for a simple task management system using Python, Django and 
 9 - python manage.py createsuperuser
 
 
-# run
+# Testing
+
+1 - python manage.py test
+
+
+# Run
 
 1 - python manage.py runserver
