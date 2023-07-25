@@ -10,8 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
-from pathlib import Path
 from datetime import timedelta
+from pathlib import Path
+
 import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -67,19 +68,15 @@ MIDDLEWARE = [
 
 
 SWAGGER_SETTINGS = {
-    'SECURITY_DEFINITIONS': {
-        "Auth Token": {
-            "type": "apiKey",
-            "name": "Authorization",
-            "in": "header"
-        }
+    "SECURITY_DEFINITIONS": {
+        "Auth Token": {"type": "apiKey", "name": "Authorization", "in": "header"}
     }
 }
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     # 'EXCEPTION_HANDLER': 'apps.tasks.exceptions.system_general_exception_handler',
 }
@@ -130,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
 }
 
 

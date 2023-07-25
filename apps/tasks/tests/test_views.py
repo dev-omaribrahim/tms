@@ -1,12 +1,10 @@
 import logging
 
+from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-
 from rest_framework_simplejwt.tokens import AccessToken
-from django.contrib.auth.models import User
-
 
 from ..models import Task
 
@@ -17,11 +15,12 @@ class TaskListCreateAPIViewTest(APITestCase):
     """
 
     def setUp(self):
-        
         logger = logging.getLogger("django.request")
         logger.setLevel(logging.ERROR)
 
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword"
+        )
         self.access_token = AccessToken.for_user(self.user)
 
         self.task1 = Task.objects.create(
@@ -38,9 +37,9 @@ class TaskListCreateAPIViewTest(APITestCase):
             description="task description",
             due_date="2023-07-01",
         )
-        
+
     def authenticate(self):
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(self.access_token))
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.access_token))
 
     def test_get_tasks(self):
         """
@@ -155,7 +154,9 @@ class TaskDetailAPIViewTest(APITestCase):
         logger = logging.getLogger("django.request")
         logger.setLevel(logging.ERROR)
 
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword"
+        )
         self.access_token = AccessToken.for_user(self.user)
 
         self.task = Task.objects.create(
@@ -167,7 +168,7 @@ class TaskDetailAPIViewTest(APITestCase):
         )
 
     def authenticate(self):
-        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + str(self.access_token))
+        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + str(self.access_token))
 
     def test_get_task(self):
         """
